@@ -1,0 +1,22 @@
+{
+  "name": "nodedb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cp1001/nodedb.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cp1001/nodedb/issues"
+  },
+  "homepage": "https://github.com/cp1001/nodedb#readme",
+  "dependencies": {
+    "mysql": "^2.15.0"
+  }
+}
