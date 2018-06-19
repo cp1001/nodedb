@@ -1,4 +1,5 @@
 var mysql = require('mysql');
+
 var connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -6,9 +7,28 @@ var connection = mysql.createConnection({
     // port: '3306',  
     database: 'test1',
     // multipleStatements: true
+    connectTimeout: 2000
 });
 
-connection.connect();
+connection.on('connect', () => {// 连接后捕获到了事件
+    console.log('connection connected!');
+});
+connection.on('error', (err) => {// 这个事件捕获不到，连接错误不会抛出
+    console.log('connection err!', err);
+});
+connection.on('end', (err) => {// 结束时抛出
+    console.log('connection end!', err);
+});
+
+connection.connect(function (err) {
+    if (err) {
+        console.error('error connecting: ', err.message);
+        throw err;
+        // return;
+    }
+    console.log('connected as id ' + connection.threadId);
+});
+console.log('connection.threadId=', connection.threadId);
 
 connection.query('SELECT 1 + 1 AS solution', function (error, results, fields) {
     if (error) throw error;
@@ -19,8 +39,7 @@ function doCreateTable() {
     var sql = "CREATE TABLE person(id int NOT NULL AUTO_INCREMENT PRIMARY KEY,name varchar(255),sex varchar(255))";
     connection.query(sql, function (err, result) {
         if (err) {
-            console.log('[CREATE TABLE ERROR] - ', err.message);
-            return;
+            throw new Error(err);
         }
         console.log('--------------------------CREATE TABLE----------------------------');
         console.log(result);
@@ -94,7 +113,7 @@ function doUpadate() {
     });
 }
 
-function doDelete(name='lucy') {
+function doDelete(name = 'lucy') {
     var delSql = `DELETE FROM person where name="${name}"`;
     connection.query(delSql, function (err, result) {
         if (err) {
@@ -106,7 +125,7 @@ function doDelete(name='lucy') {
         console.log('-----------------------------------------------------------------\n\n');
     });
 }
-function doDeleteAll(){
+function doDeleteAll() {
     var delSql = `DELETE FROM person where name!=""`;
     connection.query(delSql);
 }
